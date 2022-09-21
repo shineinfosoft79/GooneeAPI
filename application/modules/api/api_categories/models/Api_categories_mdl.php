@@ -352,9 +352,9 @@ Class Api_categories_mdl extends CI_Model{
 	}
 
 	public function read_single_notification($data){
-		$update['set'] = ['status'=>'read'];
-		$this->db->where('nid', $data['id']);
-		$this->db->update('notification', $update['set']);
+		$update = ['status'=>'read'];
+		$this->db->where('nid', $data['nid']);
+		$this->db->update('notification', $update);
 		// echo $this->db->last_query();exit;
 	}
 
