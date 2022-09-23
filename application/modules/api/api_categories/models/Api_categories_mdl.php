@@ -444,7 +444,7 @@ Class Api_categories_mdl extends CI_Model{
 
 	public function list_cart($data){
 
-		$this->db->select("c.id,u.name,s.title,s.thumb_img as attach,s.limit,s.fees");
+		$this->db->select("c.id,u.name,s.title,s.thumb_img as attach,s.limit,s.fees,c.type,c.cid");
 		$this->db->from('cart c');
 		$this->db->where('c.checkout_status !=','paid');
 		$this->db->where('c.type','webinar');
@@ -460,7 +460,7 @@ Class Api_categories_mdl extends CI_Model{
 
 	public function list_cart_course($data){
 
-		$this->db->select("c.id,u.name,s.title,s.thumb as attach,s.fees");
+		$this->db->select("c.id,u.name,s.title,s.thumb as attach,s.fees,c.type,c.cid");
 		$this->db->from('cart c');
 		$this->db->where('c.checkout_status !=','paid');
 		$this->db->where('c.uid',$data['uid']);
