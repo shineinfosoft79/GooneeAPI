@@ -28,9 +28,17 @@ Class Api_categories extends MX_Controller{
 
 			$data['created_date'] = date('Y-m-d h:i:s', time());
 
-			$this->Api_categories_mdl->add_card($data);
-
-			$this->api_handler->api_response("200", "add", array(), $data);
+			$res = $this->Api_categories_mdl->get_card($data);
+			if(!empty($res))
+			{
+				$this->Api_categories_mdl->update_card($data);
+				$this->api_handler->api_response("200", "Card Updated", array(), $data);
+			}
+			else
+			{
+				$this->Api_categories_mdl->add_card($data);
+				$this->api_handler->api_response("200", "Card Added", array(), $data);
+			}
 
 		}catch (Exception $e){
 			$this->api_handler->api_response($e->getCode(), $e->getMessage(), "", "");

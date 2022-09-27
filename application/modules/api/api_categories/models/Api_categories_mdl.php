@@ -648,5 +648,16 @@ Class Api_categories_mdl extends CI_Model{
 		$this->db->where('nid', $data['nid']);
     	$this->db->delete('notification');
 	}
+	public function update_card($data){
+		$param = array(
+			"card_holder"=> $data['card_holder'],
+			"card_no"=> $data['card_no'],
+			"exp_month"=>$data['card_no'],
+			"exp_year"=>$data['exp_year'],
+		);
+		$this->db->where('uid', $data['uid']);
+		$this->db->where('p_type', $data['p_type']);
+		$this->db->update('card_details', $param);
+	}
 }
 ?>
