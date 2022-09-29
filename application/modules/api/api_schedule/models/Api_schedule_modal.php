@@ -573,7 +573,7 @@ Class Api_schedule_modal extends CI_Model{
 
 	public function get_payment_history($uid)
 	{
-		$this->db->select("c.*,c.id as transaction_id, c.item_price as price,c.item_type as type,c.created as created_date,u.profileImg,u.name");
+		$this->db->select("c.*,c.txn_id as transaction_id, c.item_price as price,c.item_type as type,c.created as created_date,u.profileImg,u.name");
 		$this->db->where('c.u_id',$uid);
 		$this->db->from('transaction c');
 		$this->db->join('users u','u.id =c.u_id');
