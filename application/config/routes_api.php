@@ -105,7 +105,7 @@ $route['api/schedule/set-one2one'] = "api_schedule/Api_schedule/set_one2one";
 $route['api/schedule/update-one2one'] = "api_schedule/Api_schedule/update_one2one";
 $route['api/schedule/get-one2one'] = "api_schedule/Api_schedule/get_one2one";
 $route['api/schedule/my-call'] = "api_schedule/Api_schedule/my_call";
-
+$route['api/schedule/payment_history'] = "api_schedule/Api_schedule/user_payment_history";
 
 
 

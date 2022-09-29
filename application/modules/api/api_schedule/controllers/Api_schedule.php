@@ -1246,6 +1246,38 @@ Class Api_schedule extends MX_Controller{
 		return $this->api_handler->api_validation($config,"post",false);
 
 	}
+	public function user_payment_history()
+	{
+		try {
+			$data =  $this->validation_payment_history();
+			//print_r($data);exit;
+			$result = $this->Api_schedule_modal->get_payment_history($data['uid']);
+
+			foreach($result as $key =>$user){
+				if($user['profileImg'] == '' || $user['profileImg'] == null)
+				{ 
+					$result['profileImg'] = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
+				}
+			}
+			
+			$this->api_handler->api_response("200", "post", array(), $result);
+
+		}catch (Exception $e){
+			$this->api_handler->api_response($e->getCode(), $e->getMessage(), "", "");
+		}
+	}
+	protected function validation_payment_history(){
+
+		$config = array(
+			array(
+				'field' => 'uid',
+				'label' => 'uid',
+				'rules' => 'required'
+			)
+		);
+		return $this->api_handler->api_validation($config,"post",false);
+
+	}
 }
 
 ?>
