@@ -1273,10 +1273,14 @@ Class Api_schedule extends MX_Controller{
 					$history['tutor_id'] = $one2one_data['created_by'];
 				}
 				$tutor_data = $this->Api_schedule_modal->get_tutor_details($history['created_by']);
-
+				
 				if($tutor_data['profileImg'] == '' || $tutor_data['profileImg'] == null)
 				{ 
 					$history['profileImg'] = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
+				}
+				else
+				{
+					$history['profileImg'] = $tutor_data['profileImg'];
 				}
 			}
 			
