@@ -573,12 +573,45 @@ Class Api_schedule_modal extends CI_Model{
 
 	public function get_payment_history($uid)
 	{
-		$this->db->select("c.*,c.txn_id as transaction_id, c.item_price as price,c.item_type as type,c.created as created_date,u.profileImg,u.name");
+		$this->db->select("c.item_id,c.txn_id as transaction_id, c.item_price as price,c.item_type as type,c.created as created_at");
 		$this->db->where('c.u_id',$uid);
 		$this->db->from('transaction c');
-		$this->db->join('users u','u.id =c.u_id');
 		if( $result = $this->db->get()->result_array() ){ return $result; }
 		else{ return []; }
+	}
+	public function get_webinar_name($id){
+		$this->db->select('id,title,created_by');
+	    $this->db->from('schudule');
+	    $this->db->where('id',$id);
+	    $query = $this->db->get();
+        $result = $query->row_array();
+        return $result;
+	}
+	public function get_course_name($id){
+		$this->db->select('id,title,created_by');
+	    $this->db->from('course');
+	    $this->db->where('id',$id);
+	    $query = $this->db->get();
+        $result = $query->row_array();
+        return $result;
+	}
+	public function get_one2onecall($id)
+	{
+		$this->db->select('id,tutorId');
+	    $this->db->from('one2onesetcall');
+	    $this->db->where('id',$id);
+	    $query = $this->db->get();
+        $result = $query->row_array();
+        return $result;
+	}
+	public function get_tutor_details($id)
+	{
+		$this->db->select('id,name,profileImg');
+	    $this->db->from('user');
+	    $this->db->where('id',$id);
+	    $query = $this->db->get();
+        $result = $query->row_array();
+        return $result;
 	}
 	// public function getCourseByUserIdAndType($data){
 	// 	$current_date = date('Y-m-d H:i:s');

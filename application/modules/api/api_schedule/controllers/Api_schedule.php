@@ -1250,13 +1250,33 @@ Class Api_schedule extends MX_Controller{
 	{
 		try {
 			$data =  $this->validation_payment_history();
-			//print_r($data);exit;
+			
 			$result = $this->Api_schedule_modal->get_payment_history($data['uid']);
 
-			foreach($result as $key =>$user){
-				if($user['profileImg'] == '' || $user['profileImg'] == null)
+			foreach($result as $key =>$history){
+				if($history['type'] == "webinar")
+				{
+					$webinar_data  = $this->Api_schedule_modal->get_webinar_name($history['item_id']);
+					$history['title'] = $webinar_data['title'];
+					$history['tutor_id'] = $webinar_data['created_by'];
+				}
+				else if($history['type'] == "course")
+				{
+					$course_data  = $this->Api_schedule_modal->get_course_name($history['item_id']);
+					$history['title'] = $course_data['title'];
+					$history['tutor_id'] = $course_data['created_by'];
+				}
+				else
+				{
+					$one2one_data  = $this->Api_schedule_modal->get_one2onecall($history['item_id']);
+					$history['title'] = 'Call';
+					$history['tutor_id'] = $one2one_data['created_by'];
+				}
+				$tutor_data = $this->Api_schedule_modal->get_tutor_details($history['created_by']);
+
+				if($tutor_data['profileImg'] == '' || $tutor_data['profileImg'] == null)
 				{ 
-					$result['profileImg'] = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
+					$history['profileImg'] = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
 				}
 			}
 			
