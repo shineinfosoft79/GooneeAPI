@@ -607,7 +607,7 @@ Class Api_schedule_modal extends CI_Model{
 	public function get_tutor_details($id)
 	{
 		$this->db->select('id,name,profileImg');
-	    $this->db->from('user');
+	    $this->db->from('users');
 	    $this->db->where('id',$id);
 	    $query = $this->db->get();
         $result = $query->row_array();
