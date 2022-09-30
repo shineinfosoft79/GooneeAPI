@@ -1283,6 +1283,7 @@ Class Api_schedule extends MX_Controller{
 				{
 					$history['profileImg'] = $tutor_data['profileImg'];
 				}
+				$date = strtotime($history['created_at']);
 				array_push($resultdata,array(
 					'title' => $history['title'],
 					'username' => $history['username'],
@@ -1290,7 +1291,8 @@ Class Api_schedule extends MX_Controller{
 					'transaction_id' => $history['transaction_id'],
 					'price' => $history['price'],
 					'type' => $history['type'],
-					'created_at' => $history['created_at'],
+					'created_date' => date('d/m/y',$date),
+					'created_time' => date('h:m A',$date),
 				));
 			}
 			
