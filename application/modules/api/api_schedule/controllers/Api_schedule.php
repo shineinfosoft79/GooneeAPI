@@ -1272,7 +1272,7 @@ Class Api_schedule extends MX_Controller{
 					$history['title'] = 'Call';
 					$history['tutor_id'] = $one2one_data['created_by'];
 				}
-				$tutor_data = $this->Api_schedule_modal->get_tutor_details($history['created_by']);
+				$tutor_data = $this->Api_schedule_modal->get_tutor_details($history['tutor_id']);
 				
 				if($tutor_data['profileImg'] == '' || $tutor_data['profileImg'] == null)
 				{ 
