@@ -579,9 +579,9 @@ Class Api_schedule extends MX_Controller{
 
 			foreach ($result as $key => $rr) {
 				if($rr['profileImg'] == null || $rr['profileImg'] == ''){
-					$result[$key]['profileImg'] = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+					$history['profileImg'] = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
 				}elseif ($rr['social_provider_type'] == 0) {
-					$result[$key]['profileImg'] = base_url().$result['profileImg'];
+					$history['profileImg'] = base_url().$result['profileImg'];
 				}
 			}
 
@@ -1252,8 +1252,9 @@ Class Api_schedule extends MX_Controller{
 			$data =  $this->validation_payment_history();
 			
 			$result = $this->Api_schedule_modal->get_payment_history($data['uid']);
-
+			$resultdata = array();
 			foreach($result as $key =>$history){
+				
 				if($history['type'] == "webinar")
 				{
 					$webinar_data  = $this->Api_schedule_modal->get_webinar_name($history['item_id']);
@@ -1273,7 +1274,7 @@ Class Api_schedule extends MX_Controller{
 					$history['tutor_id'] = $one2one_data['created_by'];
 				}
 				$tutor_data = $this->Api_schedule_modal->get_tutor_details($history['tutor_id']);
-				
+				$history['username'] = $tutor_data['name'];
 				if($tutor_data['profileImg'] == '' || $tutor_data['profileImg'] == null)
 				{ 
 					$history['profileImg'] = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
@@ -1282,9 +1283,18 @@ Class Api_schedule extends MX_Controller{
 				{
 					$history['profileImg'] = $tutor_data['profileImg'];
 				}
+				array_push($resultdata,array(
+					'title' => $history['title'],
+					'username' => $history['username'],
+					'profileImg' => $history['profileImg'],
+					'transaction_id' => $history['transaction_id'],
+					'price' => $history['price'],
+					'type' => $history['type'],
+					'created_at' => $history['created_at'],
+				));
 			}
 			
-			$this->api_handler->api_response("200", "post", array(), $result);
+			$this->api_handler->api_response("200", "post", array(), $resultdata);
 
 		}catch (Exception $e){
 			$this->api_handler->api_response($e->getCode(), $e->getMessage(), "", "");
