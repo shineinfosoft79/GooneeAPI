@@ -353,32 +353,73 @@ Class Api_categories extends MX_Controller{
 	public function get_transaction(){
 		try {
 			$data = $this->validation_get_transcation();
-			$transaction = $this->Api_categories_mdl->get_transaction($data);
-			if($data['type'] =='' || $data['type'] =='one2one'){
-			$transaction_one2one = $this->Api_categories_mdl->get_transaction_one2one($data);
-			$transaction = array_merge($transaction,$transaction_one2one);
-			}
-			$result = [];
-			foreach ($transaction as $key => $value) {
-				$transaction[$key]['purchaseby'] = $value['name'];
-				if($value['type']=='course'){
-					$tmp = $this->Api_categories_mdl->get_c_detail($value);
-				}else if($value['type']=='webinar'){
-					$tmp = $this->Api_categories_mdl->get_s_detail($value);
-				}else if($value['type']=='one2one'){
-					$tmp = $this->Api_categories_mdl->get_o_detail($value);
+			if(isset($data['user_type']) && $data['user_type']=='tutor')
+			{
+				
+				if($data['type'] =='' ){
+					$webinar_transaction = $this->Api_categories_mdl->get_transaction_webinar_tutor($data);
+					$course_transaction = $this->Api_categories_mdl->get_transaction_course_tutor($data);
+					$transaction_one2one = $this->Api_categories_mdl->get_transaction_one2one_tutor($data);
+					$transaction_data = array_merge($webinar_transaction,$course_transaction);
+					$transaction = array_merge($transaction_data,$transaction_one2one);
 				}
-				$transaction[$key]['total'] = $value['price'];
-				$transaction[$key]['courseName'] = $tmp['title'];
-				if($tmp['thumb'] == null || $tmp['thumb'] == ''){
-					$tmp['thumb'] = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+				else if($data['type'] =='webinar')
+				{
+					$transaction = $this->Api_categories_mdl->get_transaction_webinar_tutor($data);
 				}
-				$transaction[$key]['productImg'] = $tmp['thumb'];
+				else if( $data['type'] =='course')
+				{
+					$transaction = $this->Api_categories_mdl->get_transaction_course_tutor($data);
+				}
+				else if( $data['type'] =='one2one')
+				{
+					$transaction = $this->Api_categories_mdl->get_transaction_one2one_tutor($data);
+				}
+				$result = [];
+				foreach ($transaction as $key => $value) {
+					$transaction[$key]['purchaseby'] = $value['name'];
+					if($value['type']=='course'){
+						$tmp = $this->Api_categories_mdl->get_c_detail($value);
+					}else if($value['type']=='webinar'){
+						$tmp = $this->Api_categories_mdl->get_s_detail($value);
+					}else if($value['type']=='one2one'){
+						$tmp = $this->Api_categories_mdl->get_o_detail($value);
+					}
+					$transaction[$key]['total'] = $value['price'];
+					$transaction[$key]['courseName'] = $tmp['title'];
+					if($tmp['thumb'] == null || $tmp['thumb'] == ''){
+						$tmp['thumb'] = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+					}
+					$transaction[$key]['productImg'] = $tmp['thumb'];
 
+				}
 			}
-		
+			else
+			{
+				$transaction = $this->Api_categories_mdl->get_transaction($data);
+				if($data['type'] =='' || $data['type'] =='one2one'){
+					$transaction_one2one = $this->Api_categories_mdl->get_transaction_one2one($data);
+					$transaction = array_merge($transaction,$transaction_one2one);
+				}
+				$result = [];
+				foreach ($transaction as $key => $value) {
+					$transaction[$key]['purchaseby'] = $value['name'];
+					if($value['type']=='course'){
+						$tmp = $this->Api_categories_mdl->get_c_detail($value);
+					}else if($value['type']=='webinar'){
+						$tmp = $this->Api_categories_mdl->get_s_detail($value);
+					}else if($value['type']=='one2one'){
+						$tmp = $this->Api_categories_mdl->get_o_detail($value);
+					}
+					$transaction[$key]['total'] = $value['price'];
+					$transaction[$key]['courseName'] = $tmp['title'];
+					if($tmp['thumb'] == null || $tmp['thumb'] == ''){
+						$tmp['thumb'] = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+					}
+					$transaction[$key]['productImg'] = $tmp['thumb'];
 
-
+				}
+			}
 			$this->api_handler->api_response("200", "get", array(), $transaction);
 
 		}catch (Exception $e){
@@ -415,6 +456,11 @@ Class Api_categories extends MX_Controller{
 			array(
 				'field' => 'type',
 				'label' => 'type',
+				'rules' => ''
+			),
+			array(
+				'field' => 'user_type',
+				'label' => 'user_type',
 				'rules' => ''
 			)
 		);

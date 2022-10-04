@@ -134,6 +134,52 @@ Class Api_categories_mdl extends CI_Model{
 		else{ return []; }
 	}
 
+	//For Tutor
+	public function get_transaction_webinar_tutor($data){
+		$first_date = date('Y-m-d', strtotime( $data['startDate'] ));
+		$second_date  = date('Y-m-d', strtotime( $data['endDate'] ));
+		$condition = "DATE_FORMAT(c.created_date, '%Y-%m-%d') BETWEEN '$first_date' AND '$second_date' ";
+		$this->db->where($condition);
+		$this->db->select("c.*,u.profileImg,u.name");
+		$this->db->where('c.type','webinar');
+		$this->db->where('c.checkout_status','paid');
+		$this->db->where('s.created_by',$data['uid']);
+		$this->db->from('cart c');
+		$this->db->join('users u','u.id =c.uid');
+		$this->db->join('schudule s','s.id =c.item_id');
+		if( $result = $this->db->get()->result_array() ){ return $result; }
+		else{ return []; }
+	}
+	public function get_transaction_course_tutor($data){
+		$first_date = date('Y-m-d', strtotime( $data['startDate'] ));
+		$second_date  = date('Y-m-d', strtotime( $data['endDate'] ));
+		$condition = "DATE_FORMAT(c.created_date, '%Y-%m-%d') BETWEEN '$first_date' AND '$second_date' ";
+		$this->db->where($condition);
+		$this->db->select("c.*,u.profileImg,u.name");
+		$this->db->where('c.type','course');
+		$this->db->where('c.checkout_status','paid');
+		$this->db->where('s.created_by',$data['uid']);
+		$this->db->from('cart c');
+		$this->db->join('users u','u.id =c.uid');
+		$this->db->join('course s','s.id =c.item_id');
+		if( $result = $this->db->get()->result_array() ){ return $result; }
+		else{ return []; }
+	}
+	public function get_transaction_one2one_tutor($data){
+		$first_date = date('Y-m-d', strtotime( $data['startDate'] ));
+		$second_date  = date('Y-m-d', strtotime( $data['endDate'] ));
+		$condition = "DATE_FORMAT(c.created, '%Y-%m-%d') BETWEEN '$first_date' AND '$second_date' ";
+		$this->db->where($condition);
+		$this->db->select("c.*,c.item_price as price,c.item_type as type,c.created as created_date,u.profileImg,u.name");
+		$this->db->where('s.tutorId',$data['uid']);
+		$this->db->where('c.item_type','one2one');
+		$this->db->from('transaction c');
+		$this->db->join('users u','u.id =c.u_id');
+		$this->db->join('one2onesetcall s','s.id =c.item_id');
+		if( $result = $this->db->get()->result_array() ){ return $result; }
+		else{ return []; }
+	}
+
 	public function get_c_detail($data){
 		$this->db->select("c.*");
 		$this->db->where('c.id',$data['cid']);
