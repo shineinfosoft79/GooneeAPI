@@ -146,7 +146,7 @@ Class Api_categories_mdl extends CI_Model{
 		$this->db->where('s.created_by',$data['uid']);
 		$this->db->from('cart c');
 		$this->db->join('users u','u.id =c.uid');
-		$this->db->join('schudule s','s.id =c.item_id');
+		$this->db->join('schudule s','s.id =c.cid');
 		if( $result = $this->db->get()->result_array() ){ return $result; }
 		else{ return []; }
 	}
@@ -161,7 +161,7 @@ Class Api_categories_mdl extends CI_Model{
 		$this->db->where('s.created_by',$data['uid']);
 		$this->db->from('cart c');
 		$this->db->join('users u','u.id =c.uid');
-		$this->db->join('course s','s.id =c.item_id');
+		$this->db->join('course s','s.id =c.cid');
 		if( $result = $this->db->get()->result_array() ){ return $result; }
 		else{ return []; }
 	}
