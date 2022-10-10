@@ -1,6 +1,7 @@
 <?php 
 defined('BASEPATH') OR exit('No direct script access allowed');
 require_once APPPATH.'third_party/aws/aws-autoloader.php';
+require_once APPPATH.'third_party/stripe-php/init.php'; 
 
 Class Api_user_login extends MX_Controller{
 
@@ -39,6 +40,31 @@ Class Api_user_login extends MX_Controller{
 
 
 				$this->api_user_login_mdl->user_update_token($user_result);
+				if($user_result['user_type'] == 'tutor')
+				{
+					if($user_result['stripe_account_id']=='')
+					{
+						//Stripe Connect for Tutor
+						$Stripe_data = $this->CreateTutorStripeAccount($user_result);
+						$user_result['is_stripe_connect '] = false;
+						$stripe_account_id = $Stripe_data['id'];
+						$update_data = $user_result;
+						$update_data['stripe_account_id'] = $stripe_account_id;
+						$update_token = $this->api_user_login_mdl->update_token_tutor($update_data);
+					}
+					else
+					{
+						$user_result['is_stripe_connect '] = true;
+						$user_result['stripe_connect_url '] = "";
+
+					}
+					
+				}
+				else
+				{
+					$user_result['is_stripe_connect '] = false;
+					$user_result['stripe_connect_url '] = "";
+				}
 				
 				$this->api_handler->api_response("200", "login", array('auth_token'=>$user_result['remember_token']), $user_result);
 			}
@@ -653,6 +679,27 @@ Class Api_user_login extends MX_Controller{
 			)
 		);
 		return $this->api_handler->api_validation($config,"post",false);
+	}
+	public function CreateTutorStripeAccount($result)
+	{
+		
+		//set stripe secret key and publishable key
+		$stripe = array(
+		"secret_key"      => "sk_test_51LASsOHERU9ThZl6qr85CdKOk74042cu5EVn3WAQBCjSFHJXAgyqwbAr8WebtsR4sJQd1Q0ezwjbaoVnVpZGGjjP0031SSM1iQ",
+		"publishable_key" => "pk_test_51LASsOHERU9ThZl6dp3gcjOJk18ofM2pK8OomqQ9jEbBCvFP9aBpXPOtaHUXzitFAsGz2unLQUbeFDE7ykvOP28t00ufqODIQs"
+		);
+		$stripe = new \Stripe\StripeClient($stripe['secret_key']); 
+
+		$Account_create = $stripe->accounts->create([
+			'type' => 'custom',
+			'country' => 'US',
+			'email' => $result['email'],
+			'capabilities' => [
+			  'card_payments' => ['requested' => true],
+			  'transfers' => ['requested' => true],
+			],
+		  ]);
+		return $Account_create->jsonSerialize();
 	}
 	
 }

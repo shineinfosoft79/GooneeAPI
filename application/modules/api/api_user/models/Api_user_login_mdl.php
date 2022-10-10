@@ -44,6 +44,13 @@ Class Api_user_login_mdl extends CI_Model{
     	//echo $this->db->last_query();exit;
     	return true;
 	}
+	//Tutor Stripe Token 
+	public function update_token_tutor($data){
+		$this->db->where('id', $data['id']);
+    	$this->db->update('users', array('stripe_account_id' => $data['stripe_account_id']));
+    	//echo $this->db->last_query();exit;
+    	return true;
+	}
 
 	public function update_login_data($data){
 		$update = array('u_online_status' => 'true' ,
