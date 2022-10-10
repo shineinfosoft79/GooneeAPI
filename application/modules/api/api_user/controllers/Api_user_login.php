@@ -7,6 +7,9 @@ Class Api_user_login extends MX_Controller{
 
 	public function __construct() {
 		$this->load->model('api_user_login_mdl');
+		ini_set('display_errors', 1);
+		ini_set('display_startup_errors', 1);
+		error_reporting(E_ALL);
 	}
 	## user login
 	public function user_login(){
@@ -15,7 +18,6 @@ Class Api_user_login extends MX_Controller{
 			$data = $this->validation_user_login(); 
 			## Get user Data
 			$user_result = $this->api_user_login_mdl->user_login(['email_phone' => $data['email_phone']]);
-
 			$f_l_name = explode(' ',$user_result['name']);
 
 			$user_result['fname'] = $f_l_name[0];
@@ -38,8 +40,8 @@ Class Api_user_login extends MX_Controller{
 					$user_result['profileImg'] = base_url($user_result['profileImg']);
 				}
 
-
 				$this->api_user_login_mdl->user_update_token($user_result);
+				
 				if($user_result['user_type'] == 'tutor')
 				{
 					if($user_result['stripe_account_id']=='')
@@ -107,10 +109,10 @@ Class Api_user_login extends MX_Controller{
 			}else{				
 				$this->api_handler->api_response("200", "User_found", array(), $user_result);
 			}
-
 		}catch (Exception $e){
 			$this->api_handler->api_response($e->getCode(), $e->getMessage(), "", "");
 		}
+		
 	}
 
 	protected function validation_user_varify(){
@@ -684,40 +686,48 @@ Class Api_user_login extends MX_Controller{
 	}
 	public function CreateTutorStripeAccount($result)
 	{
-		
-		//set stripe secret key and publishable key
-		$stripe = array(
-		"secret_key"      => "sk_test_51LASsOHERU9ThZl6qr85CdKOk74042cu5EVn3WAQBCjSFHJXAgyqwbAr8WebtsR4sJQd1Q0ezwjbaoVnVpZGGjjP0031SSM1iQ",
-		"publishable_key" => "pk_test_51LASsOHERU9ThZl6dp3gcjOJk18ofM2pK8OomqQ9jEbBCvFP9aBpXPOtaHUXzitFAsGz2unLQUbeFDE7ykvOP28t00ufqODIQs"
-		);
-		$stripe = new \Stripe\StripeClient($stripe['secret_key']); 
-
-		$Account_create = $stripe->accounts->create([
-			'type' => 'custom',
-			'country' => 'US',
-			'email' => $result['email'],
-			'capabilities' => [
-			  'card_payments' => ['requested' => true],
-			  'transfers' => ['requested' => true],
-			],
-		  ]);
-		return $Account_create->jsonSerialize();
-	}
-	function connectStripeAccount($stripekey)
-	{
-		//set stripe secret key and publishable key
-		$stripe = array(
+		try{
+			//set stripe secret key and publishable key
+		$stripe_keys = array(
 			"secret_key"      => "sk_test_51LASsOHERU9ThZl6qr85CdKOk74042cu5EVn3WAQBCjSFHJXAgyqwbAr8WebtsR4sJQd1Q0ezwjbaoVnVpZGGjjP0031SSM1iQ",
 			"publishable_key" => "pk_test_51LASsOHERU9ThZl6dp3gcjOJk18ofM2pK8OomqQ9jEbBCvFP9aBpXPOtaHUXzitFAsGz2unLQUbeFDE7ykvOP28t00ufqODIQs"
 			);
-		$stripe = new \Stripe\StripeClient($stripe['secret_key']); 
-		$connection = $stripe->accountLinks->create([
-			'account' => $stripekey,
-			'refresh_url' => base_url()."/",
-			'return_url' => base_url()."/?stripe_return = true",
-			'type' => 'account_onboarding',
-		  ]);
-		return $connection->jsonSerialize(); 
+			$stripe = new \Stripe\StripeClient($stripe_keys['secret_key']); 
+			$Account_create = $stripe->accounts->create([
+				'type' => 'custom',
+				'country' => 'US',
+				'email' => $result['email'],
+				'capabilities' => [
+				  'card_payments' => ['requested' => true],
+				  'transfers' => ['requested' => true],
+				],
+			  ]);
+			return $Account_create->jsonSerialize();
+		}catch (Exception $e){
+			$this->api_handler->api_response($e->getCode(), $e->getMessage(), "", "");
+		}
+	}
+	function connectStripeAccount($stripekey)
+	{
+			try{
+			//set stripe secret key and publishable key
+			$stripe = array(
+				"secret_key"      => "sk_test_51LASsOHERU9ThZl6qr85CdKOk74042cu5EVn3WAQBCjSFHJXAgyqwbAr8WebtsR4sJQd1Q0ezwjbaoVnVpZGGjjP0031SSM1iQ",
+				"publishable_key" => "pk_test_51LASsOHERU9ThZl6dp3gcjOJk18ofM2pK8OomqQ9jEbBCvFP9aBpXPOtaHUXzitFAsGz2unLQUbeFDE7ykvOP28t00ufqODIQs"
+				);
+			$stripe = new \Stripe\StripeClient($stripe['secret_key']); 
+			
+			$connection = $stripe->accountLinks->create([
+				'account' => $stripekey,
+				'refresh_url' => base_url()."/",
+				'return_url' => base_url()."/?stripe_return = true",
+				'type' => 'account_onboarding',
+			  ]);
+			return $connection->jsonSerialize(); 
+		}catch (Exception $e){
+			$this->api_handler->api_response($e->getCode(), $e->getMessage(), "", "");
+		}
+		
 	}
 }
 
