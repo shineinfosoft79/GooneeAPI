@@ -744,6 +744,41 @@ Class Api_user_login extends MX_Controller{
 		}
 		
 	}
+
+	public function updateStripeConnection()
+	{
+		try {
+			## Login fields validation
+			$data = $this->validation_updateStripeConnection();
+			## Get user Data.
+			if($data['stripe_return'] == false)
+			{
+				$update_data['stripe_account_id'] = NULL;
+				$update_token = $this->api_user_login_mdl->update_token_tutor($update_data);
+			}
+			
+			$this->api_handler->api_response("200", "Stripe Account Connected", array(), array());
+
+		}catch (Exception $e){
+			$this->api_handler->api_response($e->getCode(), $e->getMessage(), "", "");
+		}
+	}
+	protected function validation_updateStripeConnection(){
+
+		$config = array(
+			array(
+				'field' => 'uid',
+				'label' => 'uid',
+				'rules' => 'required'
+			),
+			array(
+				'field' => 'stripe_return',
+				'label' => 'stripe_return',
+				'rules' => 'required'
+			),
+		);
+		return $this->api_handler->api_validation($config,"post",false);
+	}
 }
 
 ?>

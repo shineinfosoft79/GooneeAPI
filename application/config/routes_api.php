@@ -3,6 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 ## User
 $route['api/user/login'] = "api_user/Api_user_login/user_login";
+$route['api/user/updateStripeConnection'] = "api_user/Api_user_login/updateStripeConnection";
 $route['api/user/verify'] = "api_user/Api_user_login/user_verify";
 $route['api/user/register'] = "api_user/Api_user_login/user_register";
 $route['api/user/reset-user'] = "api_user/Api_user_login/user_reset_password";
