@@ -53,7 +53,7 @@ Class Api_user_login extends MX_Controller{
 						$update_data = $user_result;
 						$update_data['stripe_account_id'] = $stripe_account_id;
 						$update_token = $this->api_user_login_mdl->update_token_tutor($update_data);
-						$redirect_url = $this->connectStripeAccount($stripe_account_id);
+						$redirect_url = $this->connectStripeAccount($Stripe_data['id']);
 						$user_result['stripe_connect_url '] = $redirect_url['url'];
 					}
 					else
@@ -709,21 +709,36 @@ Class Api_user_login extends MX_Controller{
 	}
 	function connectStripeAccount($stripekey)
 	{
-			try{
+		try{
 			//set stripe secret key and publishable key
-			$stripe = array(
+			$strip_keys = array(
 				"secret_key"      => "sk_test_51LASsOHERU9ThZl6qr85CdKOk74042cu5EVn3WAQBCjSFHJXAgyqwbAr8WebtsR4sJQd1Q0ezwjbaoVnVpZGGjjP0031SSM1iQ",
 				"publishable_key" => "pk_test_51LASsOHERU9ThZl6dp3gcjOJk18ofM2pK8OomqQ9jEbBCvFP9aBpXPOtaHUXzitFAsGz2unLQUbeFDE7ykvOP28t00ufqODIQs"
 				);
-			$stripe = new \Stripe\StripeClient($stripe['secret_key']); 
+			$stripe = new \Stripe\StripeClient($strip_keys['secret_key']); 
 			
 			$connection = $stripe->accountLinks->create([
 				'account' => $stripekey,
-				'refresh_url' => base_url()."/",
-				'return_url' => base_url()."/?stripe_return = true",
+				'refresh_url' => "https://gooneelive.com",
+				'return_url' => "https://gooneelive.com/?stripe_return = true",
 				'type' => 'account_onboarding',
 			  ]);
+
 			return $connection->jsonSerialize(); 
+		} catch (\Stripe\Exception\InvalidRequestException $e) {
+			// Invalid parameters were supplied to Stripe's API
+			$this->api_handler->api_response($e->getCode(), $e->getMessage(), "", "");
+		  } catch (\Stripe\Exception\AuthenticationException $e) {
+			// Authentication with Stripe's API failed
+			// (maybe you changed API keys recently)
+			$this->api_handler->api_response($e->getCode(), $e->getMessage(), "", "");
+		  } catch (\Stripe\Exception\ApiConnectionException $e) {
+			// Network communication with Stripe failed
+			$this->api_handler->api_response($e->getCode(), $e->getMessage(), "", "");
+		  } catch (\Stripe\Exception\ApiErrorException $e) {
+			// Display a very generic error to the user, and maybe send
+			// yourself an email
+			$this->api_handler->api_response($e->getCode(), $e->getMessage(), "", "");
 		}catch (Exception $e){
 			$this->api_handler->api_response($e->getCode(), $e->getMessage(), "", "");
 		}
