@@ -51,6 +51,8 @@ Class Api_user_login extends MX_Controller{
 						$update_data = $user_result;
 						$update_data['stripe_account_id'] = $stripe_account_id;
 						$update_token = $this->api_user_login_mdl->update_token_tutor($update_data);
+						$redirect_url = $this->connectStripeAccount($stripe_account_id);
+						$user_result['stripe_connect_url '] = $redirect_url['url'];
 					}
 					else
 					{
@@ -701,7 +703,22 @@ Class Api_user_login extends MX_Controller{
 		  ]);
 		return $Account_create->jsonSerialize();
 	}
-	
+	function connectStripeAccount($stripekey)
+	{
+		//set stripe secret key and publishable key
+		$stripe = array(
+			"secret_key"      => "sk_test_51LASsOHERU9ThZl6qr85CdKOk74042cu5EVn3WAQBCjSFHJXAgyqwbAr8WebtsR4sJQd1Q0ezwjbaoVnVpZGGjjP0031SSM1iQ",
+			"publishable_key" => "pk_test_51LASsOHERU9ThZl6dp3gcjOJk18ofM2pK8OomqQ9jEbBCvFP9aBpXPOtaHUXzitFAsGz2unLQUbeFDE7ykvOP28t00ufqODIQs"
+			);
+		$stripe = new \Stripe\StripeClient($stripe['secret_key']); 
+		$connection = $stripe->accountLinks->create([
+			'account' => $stripekey,
+			'refresh_url' => base_url()."/",
+			'return_url' => base_url()."/?stripe_return = true",
+			'type' => 'account_onboarding',
+		  ]);
+		return $connection->jsonSerialize(); 
+	}
 }
 
 ?>
