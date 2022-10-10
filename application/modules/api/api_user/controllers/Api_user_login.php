@@ -48,17 +48,17 @@ Class Api_user_login extends MX_Controller{
 					{
 						//Stripe Connect for Tutor
 						$Stripe_data = $this->CreateTutorStripeAccount($user_result);
-						$user_result['is_stripe_connect '] = false;
+						$user_result['is_stripe_connect'] = false;
 						$stripe_account_id = $Stripe_data['id'];
 						$update_data = $user_result;
 						$update_data['stripe_account_id'] = $stripe_account_id;
 						$update_token = $this->api_user_login_mdl->update_token_tutor($update_data);
 						$redirect_url = $this->connectStripeAccount($Stripe_data['id']);
-						$user_result['stripe_connect_url '] = $redirect_url['url'];
+						$user_result['stripe_connect_url'] = $redirect_url['url'];
 					}
 					else
 					{
-						$user_result['is_stripe_connect '] = true;
+						$user_result['is_stripe_connect'] = true;
 						$user_result['stripe_connect_url '] = "";
 
 					}
@@ -66,7 +66,7 @@ Class Api_user_login extends MX_Controller{
 				}
 				else
 				{
-					$user_result['is_stripe_connect '] = false;
+					$user_result['is_stripe_connect'] = false;
 					$user_result['stripe_connect_url '] = "";
 				}
 				
