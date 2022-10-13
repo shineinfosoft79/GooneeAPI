@@ -751,7 +751,7 @@ Class Api_user_login extends MX_Controller{
 			## Login fields validation
 			$data = $this->validation_updateStripeConnection();
 			## Get user Data.
-			if($data['stripe_return'] == false)
+			if($data['stripe_return'] == 'false')
 			{
 				$update_data['stripe_account_id'] = NULL;
 				$update_data['id'] = $data['uid'];

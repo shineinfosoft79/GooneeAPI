@@ -53,7 +53,7 @@ Class Api_user_login_mdl extends CI_Model{
 	}
 	//Tutor Stripe Token 
 	public function update_token_null_tutor($data){
-		$this->db->where('id', $data['uid']);
+		$this->db->where('id', $data['id']);
     	$this->db->update('users', array('stripe_account_id' => NULL));
     	//echo $this->db->last_query();exit;
     	return true;
