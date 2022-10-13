@@ -754,7 +754,7 @@ Class Api_user_login extends MX_Controller{
 			if($data['stripe_return'] == false)
 			{
 				$update_data['stripe_account_id'] = NULL;
-				$update_data['id'] = $data['id'];
+				$update_data['id'] = $data['uid'];
 				$update_token = $this->api_user_login_mdl->update_token_tutor($update_data);
 			}
 			
