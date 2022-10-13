@@ -755,7 +755,7 @@ Class Api_user_login extends MX_Controller{
 			{
 				$update_data['stripe_account_id'] = NULL;
 				$update_data['id'] = $data['uid'];
-				$update_token = $this->api_user_login_mdl->update_token_tutor($update_data);
+				$update_token = $this->api_user_login_mdl->update_token_null_tutor($update_data);
 			}
 			
 			$this->api_handler->api_response("200", "Stripe Account Connected", array(), array());
