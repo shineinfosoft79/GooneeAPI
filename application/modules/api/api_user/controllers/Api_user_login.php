@@ -59,7 +59,7 @@ Class Api_user_login extends MX_Controller{
 					else
 					{
 						$user_result['is_stripe_connect'] = true;
-						$user_result['stripe_connect_url '] = "";
+						$user_result['stripe_connect_url'] = "";
 
 					}
 					
@@ -67,7 +67,7 @@ Class Api_user_login extends MX_Controller{
 				else
 				{
 					$user_result['is_stripe_connect'] = false;
-					$user_result['stripe_connect_url '] = "";
+					$user_result['stripe_connect_url'] = "";
 				}
 				
 				$this->api_handler->api_response("200", "login", array('auth_token'=>$user_result['remember_token']), $user_result);
@@ -448,7 +448,7 @@ Class Api_user_login extends MX_Controller{
 			unset($data['fname'],$data['lname']);
 
 			$result = $this->api_user_login_mdl->user_update($data);
-
+			
 			$this->api_handler->api_response("200", "acocunt_update", array(), $result);
 
 		}catch (Exception $e){
@@ -719,8 +719,10 @@ Class Api_user_login extends MX_Controller{
 			
 			$connection = $stripe->accountLinks->create([
 				'account' => $stripekey,
-				'refresh_url' => "https://gooneelive.com",
-				'return_url' => "https://gooneelive.com/?stripe_return = true",
+				'refresh_url' => "http://localhost:4200",
+				'return_url' => "http://localhost:4200/?stripe_return=true",
+				// 'refresh_url' => "https://gooneelive.com",
+				// 'return_url' => "https://gooneelive.com/?stripe_return = true",
 				'type' => 'account_onboarding',
 			  ]);
 
