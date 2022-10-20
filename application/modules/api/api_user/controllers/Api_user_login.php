@@ -443,9 +443,8 @@ Class Api_user_login extends MX_Controller{
 			$data = $this->validation_account();
 			if($data['fname']){
 			  $data['name'] = $data['fname'].' '.$data['lname'];
+			  unset($data['fname'],$data['lname']);
 			}
-
-			unset($data['fname'],$data['lname']);
 
 			$result = $this->api_user_login_mdl->user_update($data);
 			
