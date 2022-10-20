@@ -443,12 +443,11 @@ Class Api_user_login extends MX_Controller{
 			$data = $this->validation_account();
 			if(isset($data['fname'])){
 			  $data['name'] = $data['fname'].' '.$data['lname'];
-			  unset($data['fname'],$data['lname']);
 			}
+			unset($data['fname'],$data['lname']);
 
 			$result = $this->api_user_login_mdl->user_update($data);
-			
-			$this->api_handler->api_response("200", "acocunt_update", array(), $result);
+			$this->api_handler->api_response("200", "acocunt_update", array(), []);
 
 		}catch (Exception $e){
 			$this->api_handler->api_response($e->getCode(), $e->getMessage(), "", "");
