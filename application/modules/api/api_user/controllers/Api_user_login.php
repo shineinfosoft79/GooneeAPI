@@ -441,7 +441,7 @@ Class Api_user_login extends MX_Controller{
     	try {
 			## fields validation
 			$data = $this->validation_account();
-			if($data['fname']){
+			if(isset($data['fname'])){
 			  $data['name'] = $data['fname'].' '.$data['lname'];
 			  unset($data['fname'],$data['lname']);
 			}
