@@ -692,8 +692,7 @@ Class Api_user_login extends MX_Controller{
 			);
 			$stripe = new \Stripe\StripeClient($stripe_keys['secret_key']); 
 			$Account_create = $stripe->accounts->create([
-				'type' => 'custom',
-				'country' => 'US',
+				'type' => 'express',
 				'email' => $result['email'],
 				'capabilities' => [
 				  'card_payments' => ['requested' => true],
