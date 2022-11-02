@@ -232,6 +232,7 @@ Class Api_schedule_modal extends CI_Model{
 	    $this->db->from('schudule s');
 	    $this->db->join('users u','u.id =s.created_by');
 	    $this->db->where('s.date_time >=',$current_date);
+		$this->db->where('u.stripe_account_id != NULL');
 		if($data['search'] !=''){
 			$this->db->like('s.title',$data['search']);
 		}
@@ -261,6 +262,7 @@ Class Api_schedule_modal extends CI_Model{
 	    $this->db->from('schudule s');
 	    $this->db->join('users u','u.id =s.created_by');
 	    $this->db->where('s.date_time <=',$current_date);
+		$this->db->where('u.stripe_account_id != NULL');
 		if($data['search'] !=''){
 			$this->db->like('s.title',$data['search']);
 		}
@@ -276,6 +278,7 @@ Class Api_schedule_modal extends CI_Model{
 	    $this->db->from('schudule s');
 	    $this->db->join('users u','u.id =s.created_by');
 	    $this->db->where('s.date_time',$current_date);
+		$this->db->where('u.stripe_account_id != NULL');
 		if($data['search'] !=''){
 			$this->db->like('s.title',$data['search']);
 		}
@@ -292,6 +295,7 @@ Class Api_schedule_modal extends CI_Model{
 		$this->db->select('s.*,u.name as created_by_name');
 	    $this->db->from('schudule s');
 	    $this->db->join('users u','u.id =s.created_by');
+		$this->db->where('u.stripe_account_id != NULL');
 	    $this->db->where('s.date_time >=',$current_date);
 
 	    if(!empty($data['schedule'])){
@@ -316,7 +320,7 @@ Class Api_schedule_modal extends CI_Model{
 	    $this->db->from('schudule s');
 	    $this->db->join('users u','u.id =s.created_by');
 	    $this->db->where('s.date_time',$current_date);
-
+		$this->db->where('u.stripe_account_id != NULL');
 	    if(!empty($data['schedule'])){
 	    	$this->db->where_in('s.id', $data['schedule']);
 	    }
@@ -339,6 +343,7 @@ Class Api_schedule_modal extends CI_Model{
 	    $this->db->from('schudule s');
 	    $this->db->join('users u','u.id =s.created_by');
 	    $this->db->where('s.date_time <=',$current_date);
+		$this->db->where('u.stripe_account_id != NULL');
 
 	    if(!empty($data['schedule'])){
 	    	$this->db->where_in('s.id',$data['schedule']);
@@ -439,6 +444,7 @@ Class Api_schedule_modal extends CI_Model{
 		$this->db->select('c.*,u.name as created_by_name');
 	    $this->db->from('course c');
 	    $this->db->join('users u','u.id =c.created_by');
+		$this->db->where('u.stripe_account_id != NULL');
 	    if(!empty($data['course'])){
 	    	$this->db->where_in('c.id', $data['course']);
 	    }
