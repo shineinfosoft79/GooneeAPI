@@ -146,6 +146,7 @@ $route['api/schedule/get-review-by-id'] = "api_schedule/Api_schedule/get_review_
 
 ##account
 $route['api/user/updateAccount'] = "api_user/Api_user_login/updateAccount";
+$route['api/user/tutorConnectAccount'] = "api_user/Api_user_login/tutor_connect_stripe_account";
 $route['api/user/compareOldPassword'] = "api_user/Api_user_login/compareOldPassword";
 
 $route['api/user/profileImgUpdate'] = "api_user/Api_user_login/profileImgUpdate";

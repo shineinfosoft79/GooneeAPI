@@ -42,33 +42,33 @@ Class Api_user_login extends MX_Controller{
 
 				$this->api_user_login_mdl->user_update_token($user_result);
 				
-				if($user_result['user_type'] == 'tutor')
-				{
-					if($user_result['stripe_account_id']=='')
-					{
-						//Stripe Connect for Tutor
-						$Stripe_data = $this->CreateTutorStripeAccount($user_result);
-						$user_result['is_stripe_connect'] = false;
-						$stripe_account_id = $Stripe_data['id'];
-						$update_data = $user_result;
-						$update_data['stripe_account_id'] = $stripe_account_id;
-						$update_token = $this->api_user_login_mdl->update_token_tutor($update_data);
-						$redirect_url = $this->connectStripeAccount($Stripe_data['id']);
-						$user_result['stripe_connect_url'] = $redirect_url['url'];
-					}
-					else
-					{
-						$user_result['is_stripe_connect'] = true;
-						$user_result['stripe_connect_url'] = "";
+				// if($user_result['user_type'] == 'tutor')
+				// {
+				// 	if($user_result['stripe_account_id']=='')
+				// 	{
+				// 		//Stripe Connect for Tutor
+				// 		$Stripe_data = $this->CreateTutorStripeAccount($user_result);
+				// 		$user_result['is_stripe_connect'] = false;
+				// 		$stripe_account_id = $Stripe_data['id'];
+				// 		$update_data = $user_result;
+				// 		$update_data['stripe_account_id'] = $stripe_account_id;
+				// 		$update_token = $this->api_user_login_mdl->update_token_tutor($update_data);
+				// 		$redirect_url = $this->connectStripeAccount($Stripe_data['id']);
+				// 		$user_result['stripe_connect_url'] = $redirect_url['url'];
+				// 	}
+				// 	else
+				// 	{
+				// 		$user_result['is_stripe_connect'] = true;
+				// 		$user_result['stripe_connect_url'] = "";
 
-					}
+				// 	}
 					
-				}
-				else
-				{
-					$user_result['is_stripe_connect'] = false;
-					$user_result['stripe_connect_url'] = "";
-				}
+				// }
+				// else
+				// {
+				// 	$user_result['is_stripe_connect'] = false;
+				// 	$user_result['stripe_connect_url'] = "";
+				// }
 				
 				$this->api_handler->api_response("200", "login", array('auth_token'=>$user_result['remember_token']), $user_result);
 			}
@@ -692,7 +692,7 @@ Class Api_user_login extends MX_Controller{
 			);
 			$stripe = new \Stripe\StripeClient($stripe_keys['secret_key']); 
 			$Account_create = $stripe->accounts->create([
-				'type' => 'express',
+				'type' => 'custom',
 				'email' => $result['email'],
 				'capabilities' => [
 				  'card_payments' => ['requested' => true],
@@ -776,6 +776,57 @@ Class Api_user_login extends MX_Controller{
 				'label' => 'stripe_return',
 				'rules' => 'required'
 			),
+		);
+		return $this->api_handler->api_validation($config,"post",false);
+	}
+	public function tutor_connect_stripe_account(){
+		try {
+			## fields validation
+			$data = $this->validation_connect_tutor_stripe();
+			## Get user Data
+			$user_result = $this->api_user_login_mdl->get_student_detail($data);
+
+			if($user_result['user_type'] == 'tutor')
+				{
+					if($user_result['stripe_account_id']=='')
+					{
+						//Stripe Connect for Tutor
+						$Stripe_data = $this->CreateTutorStripeAccount($user_result);
+						$user_result['is_stripe_connect'] = false;
+						$stripe_account_id = $Stripe_data['id'];
+						$update_data = $user_result;
+						$update_data['stripe_account_id'] = $stripe_account_id;
+						$update_token = $this->api_user_login_mdl->update_token_tutor($update_data);
+						$redirect_url = $this->connectStripeAccount($Stripe_data['id']);
+						$user_result['stripe_connect_url'] = $redirect_url['url'];
+					}
+					else
+					{
+						$user_result['is_stripe_connect'] = true;
+						$user_result['stripe_connect_url'] = "";
+					}
+				}
+				else
+				{
+					$user_result['is_stripe_connect'] = false;
+					$user_result['stripe_connect_url'] = "";
+				}
+
+			$this->api_handler->api_response("200", "get", array(), $user_result);
+
+		}catch (Exception $e){
+			$this->api_handler->api_response($e->getCode(), $e->getMessage(), "", "");
+		}
+	}
+
+	protected function validation_connect_tutor_stripe(){
+		
+		$config = array(
+			array(
+				'field' => 'uid',
+				'label' => 'uid',
+				'rules' => 'required'
+			)
 		);
 		return $this->api_handler->api_validation($config,"post",false);
 	}
