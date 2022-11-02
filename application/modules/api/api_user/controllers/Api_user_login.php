@@ -695,7 +695,7 @@ Class Api_user_login extends MX_Controller{
 				'type' => 'custom',
 				'email' => $result['email'],
 				'capabilities' => [
-				  'card_payments' => ['requested' => true],
+				//   'card_payments' => ['requested' => true],
 				  'transfers' => ['requested' => true],
 				],
 			  ]);
@@ -719,7 +719,7 @@ Class Api_user_login extends MX_Controller{
 				'refresh_url' => "http://localhost:4200",
 				'return_url' => "http://localhost:4200/?stripe_return=true",
 				// 'refresh_url' => "https://gooneelive.com",
-				// 'return_url' => "https://gooneelive.com/?stripe_return = true",
+				// 'return_url' => "https://gooneelive.com/?stripe_return=true",
 				'type' => 'account_onboarding',
 			  ]);
 
