@@ -753,11 +753,27 @@ Class Api_user_login extends MX_Controller{
 			if($data['stripe_return'] == 'false')
 			{
 				$update_data['stripe_account_id'] = NULL;
+				$update_data['is_stripe_connect'] = 0;
 				$update_data['id'] = $data['uid'];
 				$update_token = $this->api_user_login_mdl->update_token_null_tutor($update_data);
 			}
-			
-			$this->api_handler->api_response("200", "Stripe Account Connected", array(), array());
+			else
+			{
+				$update_data['is_stripe_connect'] = 1;
+				$update_data['id'] = $data['uid'];
+				$update_token = $this->api_user_login_mdl->update_stripe_flag_tutor($update_data);
+			}
+			$user_result = $this->api_user_login_mdl->get_user_detail(array());
+			$user_result['remember_token'] = _random_key();
+			if($user_result['profileImg'] == null || $user_result['profileImg'] == ''){
+					$user_result['profileImg'] = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+			}elseif(substr($user_result['profileImg'],0,4) == "http"){
+					$user_result['profileImg'] = $user_result['profileImg'];
+			}else{
+					$user_result['profileImg'] = base_url($user_result['profileImg']);
+			}
+			$this->api_user_login_mdl->user_update_token($user_result);
+			$this->api_handler->api_response("200", "Stripe Account Connected", array('auth_token'=>$user_result['remember_token']), $user_result);
 
 		}catch (Exception $e){
 			$this->api_handler->api_response($e->getCode(), $e->getMessage(), "", "");
@@ -786,7 +802,7 @@ Class Api_user_login extends MX_Controller{
 			## Get user Data
 			$user_result = $this->api_user_login_mdl->get_student_detail($data);
 
-			if($user_result['user_type'] == 'tutor')
+				if($user_result['user_type'] == 'tutor')
 				{
 					if($user_result['stripe_account_id']=='')
 					{

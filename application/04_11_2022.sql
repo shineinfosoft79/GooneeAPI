@@ -1,0 +1,1 @@
+ALTER TABLE `users` ADD `is_stripe_connect` TINYINT(1) NOT NULL DEFAULT '0' AFTER `stripe_account_id`;

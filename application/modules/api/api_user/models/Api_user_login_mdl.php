@@ -47,14 +47,22 @@ Class Api_user_login_mdl extends CI_Model{
 	//Tutor Stripe Token 
 	public function update_token_tutor($data){
 		$this->db->where('id', $data['id']);
-    	$this->db->update('users', array('stripe_account_id' => $data['stripe_account_id']));
+    	$this->db->update('users', array('stripe_account_id' => $data['stripe_account_id'],"is_stripe_connect"=>0));
     	//echo $this->db->last_query();exit;
     	return true;
 	}
 	//Tutor Stripe Token 
 	public function update_token_null_tutor($data){
 		$this->db->where('id', $data['id']);
-    	$this->db->update('users', array('stripe_account_id' => NULL));
+    	$this->db->update('users', array('stripe_account_id' => NULL,"is_stripe_connect"=>$data['is_stripe_connect']));
+    	//echo $this->db->last_query();exit;
+    	return true;
+	}
+
+	//Tutor Stripe Token 
+	public function update_stripe_flag_tutor($data){
+		$this->db->where('id', $data['id']);
+    	$this->db->update('users', array("is_stripe_connect"=>$data['is_stripe_connect']));
     	//echo $this->db->last_query();exit;
     	return true;
 	}
