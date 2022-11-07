@@ -763,7 +763,7 @@ Class Api_user_login extends MX_Controller{
 				$update_data['id'] = $data['uid'];
 				$update_token = $this->api_user_login_mdl->update_stripe_flag_tutor($update_data);
 			}
-			$user_result = $this->api_user_login_mdl->get_user_detail(array());
+			$user_result = $this->api_user_login_mdl->get_user_detail(array('id'=>$data['uid']));
 			$user_result['remember_token'] = _random_key();
 			if($user_result['profileImg'] == null || $user_result['profileImg'] == ''){
 					$user_result['profileImg'] = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
