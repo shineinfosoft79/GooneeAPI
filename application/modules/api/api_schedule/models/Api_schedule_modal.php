@@ -313,6 +313,31 @@ Class Api_schedule_modal extends CI_Model{
 		//echo $this->db->last_query();exit;
         return $result;
 	}
+	public function u_list_schedule_l($data){
+		$current_date = date('Y-m-d');
+
+		$this->db->select('s.*,u.name as created_by_name');
+	    $this->db->from('schudule s');
+	    $this->db->join('users u','u.id =s.created_by');
+		$this->db->where('s.created_by',$data['uid']);
+		// $this->db->where('u.is_stripe_connect',1);
+	    $this->db->where('s.date_time >=',$current_date);
+
+	    if(!empty($data['schedule'])){
+	    	$this->db->where_in('s.id', $data['schedule']);
+	    }
+
+	    if(!empty($data['cat_id'])){
+	    	$this->db->where('cat_id',$data['cat_id']);
+	    }
+		if($data['search'] !=''){
+			$this->db->like('s.title',$data['search']);
+		}
+	    $query = $this->db->get();
+        $result = $query->result_array();
+		//echo $this->db->last_query();exit;
+        return $result;
+	}
 	public function c_list_schedule($data){
 		$current_date = date('Y-m-d H:i:s');
 
@@ -344,6 +369,32 @@ Class Api_schedule_modal extends CI_Model{
 	    $this->db->join('users u','u.id =s.created_by');
 	    $this->db->where('s.date_time <=',$current_date);
 		$this->db->where('u.is_stripe_connect',1);
+
+	    if(!empty($data['schedule'])){
+	    	$this->db->where_in('s.id',$data['schedule']);
+	    }
+
+	    if(!empty($data['cat_id'])){
+	    	$this->db->where('cat_id',$data['cat_id']);
+	    }
+		if($data['search'] !=''){
+			$this->db->like('s.title',$data['search']);
+		}
+	    $query = $this->db->get();
+        $result = $query->result_array();
+        //echo $this->db->last_query();exit;
+        return $result;
+	}
+
+	public function p_list_schedule_l($data){ 
+		$current_date = date('Y-m-d H:i:s');
+
+		$this->db->select('s.*,u.name as created_by_name');
+	    $this->db->from('schudule s');
+	    $this->db->join('users u','u.id =s.created_by');
+	    $this->db->where('s.date_time <=',$current_date);
+		// $this->db->where('u.is_stripe_connect',1);
+		$this->db->where('s.created_by',$data['uid']);
 
 	    if(!empty($data['schedule'])){
 	    	$this->db->where_in('s.id',$data['schedule']);

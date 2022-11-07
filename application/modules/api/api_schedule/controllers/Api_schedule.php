@@ -349,12 +349,12 @@ Class Api_schedule extends MX_Controller{
 			$data = $this->validation_list_s();
 
 			if($data['upcoming-past'] == 'upcoming'){
-				$result['schedule'] = $this->Api_schedule_modal->u_list_schedule($data);
+				$result['schedule'] = $this->Api_schedule_modal->u_list_schedule_l($data);
 			}else if($data['upcoming-past'] == 'current'){
 				$result['schedule'] = $this->Api_schedule_modal->c_list_schedule($data);
 			}
 			else{
-				$result['schedule'] = $this->Api_schedule_modal->p_list_schedule($data);
+				$result['schedule'] = $this->Api_schedule_modal->p_list_schedule_l($data);
 			}
 			foreach ($result['schedule'] as $key => $value) {
 				$result['schedule'][$key]['webinar_count'] = $this->Api_schedule_modal->getWebinarCount(array('id'=>$value['id']));
