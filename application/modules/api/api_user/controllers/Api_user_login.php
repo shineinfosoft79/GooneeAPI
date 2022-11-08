@@ -18,19 +18,18 @@ Class Api_user_login extends MX_Controller{
 			$data = $this->validation_user_login(); 
 			## Get user Data
 			$user_result = $this->api_user_login_mdl->user_login(['email_phone' => $data['email_phone']]);
-			$f_l_name = explode(' ',$user_result['name']);
-
-			$user_result['fname'] = $f_l_name[0];
- 			$user_result['lname'] = $f_l_name[1];
 
 			if( empty($user_result) || $user_result['password'] != md5($data['password']) ){
 				$this->api_handler->api_response("401", "invalid_password", array(), array());
 			}else if( $user_result['active'] != 1 ){
 				$this->api_handler->api_response("401", "Account is deleted or deactive", array(), array());
 			}else{
+				$f_l_name = explode(' ',$user_result['name']);
+				$user_result['fname'] = $f_l_name[0];
+				$user_result['lname'] = $f_l_name[1];
+
 				## Token and access update
 				$user_result['remember_token'] = _random_key();
-
 
 				if($user_result['profileImg'] == null || $user_result['profileImg'] == ''){
 					$user_result['profileImg'] = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
@@ -72,11 +71,9 @@ Class Api_user_login extends MX_Controller{
 				
 				$this->api_handler->api_response("200", "login", array('auth_token'=>$user_result['remember_token']), $user_result);
 			}
-
 		}catch (Exception $e){
 			$this->api_handler->api_response($e->getCode(), $e->getMessage(), "", "");
 		}
-
 	}
 
 	protected function validation_user_login(){
@@ -716,10 +713,12 @@ Class Api_user_login extends MX_Controller{
 			
 			$connection = $stripe->accountLinks->create([
 				'account' => $stripekey,
-				'refresh_url' => "http://localhost:4200",
-				'return_url' => "http://localhost:4200/?stripe_return=true",
-				// 'refresh_url' => "https://gooneelive.com",
-				// 'return_url' => "https://gooneelive.com/?stripe_return=true",
+				// 'refresh_url' => "http://localhost:4200/account-setting",
+				// 'return_url' => "http://localhost:4200/account-setting?stripe_return=true",
+				// 'refresh_url' => "https://gooneelive.com/account-setting",
+				// 'return_url' => "https://gooneelive.com/account-setting?stripe_return=true",
+				'refresh_url' => "https://192.168.1.25:4200/account-setting",
+				'return_url' => "http://192.168.1.25:4200/account-setting?stripe_return=true",
 				'type' => 'account_onboarding',
 			  ]);
 
