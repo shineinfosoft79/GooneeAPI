@@ -705,5 +705,15 @@ Class Api_categories_mdl extends CI_Model{
 		$this->db->where('p_type', $data['p_type']);
 		$this->db->update('card_details', $param);
 	}
+	public function getAdminCommission()
+	{
+		$this->db->select("admin_commission");
+		$this->db->from('admin');
+		$this->db->where('id',1);
+		$this->db->limit(1);
+
+		if( $result = $this->db->get()->row_array() ){ return $result['admin_commission']; }
+		else{ return 0; }
+	}
 }
 ?>

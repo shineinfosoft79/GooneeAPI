@@ -393,6 +393,7 @@ Class Api_schedule extends MX_Controller{
 				}else{
 					$result['schedule'][$key]['purchased'] = false;
 				}
+				$result['schedule'][$key]['webinar_count'] = $this->Api_schedule_modal->getWebinarCount(array('id'=>$value['id']));
 					
 			}
 

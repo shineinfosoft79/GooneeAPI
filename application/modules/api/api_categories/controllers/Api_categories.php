@@ -385,7 +385,10 @@ Class Api_categories extends MX_Controller{
 					}else if($value['type']=='one2one'){
 						$tmp = $this->Api_categories_mdl->get_o_detail($value);
 					}
-					$transaction[$key]['total'] = $value['price'];
+					$admin_commission = $this->Api_categories_mdl->getAdminCommission();
+					$t_per = 100 - (int)$admin_commission;
+					$tutor_amt  = round(((int)$value['price'] * $t_per)/100) * 100;
+					$transaction[$key]['total'] = $tutor_amt;
 					$transaction[$key]['courseName'] = $tmp['title'];
 					if($tmp['thumb'] == null || $tmp['thumb'] == ''){
 						$tmp['thumb'] = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
@@ -411,7 +414,10 @@ Class Api_categories extends MX_Controller{
 					}else if($value['type']=='one2one'){
 						$tmp = $this->Api_categories_mdl->get_o_detail($value);
 					}
-					$transaction[$key]['total'] = $value['price'];
+					$admin_commission = $this->Api_user_login_mdl->getAdminCommission();
+					$t_per = 100 - (int)$admin_commission;
+					$tutor_amt  = round(((int)$value['price'] * $t_per)/100) * 100;
+					$transaction[$key]['total'] = $tutor_amt;
 					$transaction[$key]['courseName'] = $tmp['title'];
 					if($tmp['thumb'] == null || $tmp['thumb'] == ''){
 						$tmp['thumb'] = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
