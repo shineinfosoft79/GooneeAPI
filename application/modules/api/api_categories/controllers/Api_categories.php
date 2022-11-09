@@ -387,7 +387,7 @@ Class Api_categories extends MX_Controller{
 					}
 					$admin_commission = $this->Api_categories_mdl->getAdminCommission();
 					$t_per = 100 - (int)$admin_commission;
-					$tutor_amt  = round(((int)$value['price'] * $t_per)/100);
+					$tutor_amt  = ((int)$value['price'] * $t_per)/100;
 					$transaction[$key]['total'] = $tutor_amt;
 					$transaction[$key]['courseName'] = $tmp['title'];
 					if($tmp['thumb'] == null || $tmp['thumb'] == ''){
