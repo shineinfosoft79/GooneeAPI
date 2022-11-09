@@ -175,7 +175,7 @@ Class Api_categories_mdl extends CI_Model{
 		$this->db->where('c.item_type','one2one');
 		$this->db->from('transaction c');
 		$this->db->join('users u','u.id =c.u_id');
-		$this->db->join('one2onesetcall s','s.id =c.item_id');
+		$this->db->join('one2oneSetCall s','s.id =c.item_id');
 		if( $result = $this->db->get()->result_array() ){ return $result; }
 		else{ return []; }
 	}
